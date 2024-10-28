@@ -1,0 +1,8 @@
+#spring:
+#  application:
+#    name: user-Manager
+#  cloud:
+#    nacos:
+#      config:
+#        server-addr: 1.95.6.188:8848
+#        file-extension: yaml

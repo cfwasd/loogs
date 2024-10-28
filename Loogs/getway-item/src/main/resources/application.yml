@@ -1,0 +1,20 @@
+spring:
+  application:
+    name: getway-item
+  cloud:
+    nacos:
+      config:
+        server-addr: 127.0.0.1:8848
+        file-extension: yaml
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+          lower-case-service-id: true
+      routes:
+        - id: user-manager
+          uri:  lb://user-manager
+          predicates:
+            - Path=/user/**
+server:
+  port: 8080
