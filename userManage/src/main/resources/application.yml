@@ -6,13 +6,13 @@ spring:
   cloud:
     nacos:
       config:
-        server-addr: 127.0.0.1:8848
+        server-addr: 1.95.6.188:8848
         file-extension: yaml
   datasource:
     # 数据库连接 URL
-    url: jdbc:mysql://localhost:3306/userMange?useSSL=false&requireSSL=false&allowPublicKeyRetrieval=true
+    url: jdbc:mysql://1.95.6.188:3306/usermange
     # 数据库用户名
-    username: root
+    username: userMange
     # 数据库密码
     password: yuyuhang66
     # 数据库驱动类名称
