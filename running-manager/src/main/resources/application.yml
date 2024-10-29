@@ -1,0 +1,6 @@
+spring:
+  application:
+    name: running-manager
+
+server:
+  port: 8083

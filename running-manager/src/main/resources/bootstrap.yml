@@ -1,6 +1,6 @@
 spring:
   application:
-    name: gateway-item
+    name: running-manager
   cloud:
     nacos:
       discovery:

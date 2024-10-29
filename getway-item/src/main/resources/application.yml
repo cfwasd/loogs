@@ -1,22 +1,22 @@
 spring:
   application:
-    name: getway-item
+    name: gateway-item
 #  main:
 #    web-application-type: reactive
-  cloud:
-    nacos:
-      config:
-        server-addr: 1.95.6.188:8848
-        file-extension: yaml
-    gateway:
-      discovery:
-        locator:
-          enabled: true
-          lower-case-service-id: true
-      routes:
-        - id: user-manager
-          uri:  lb://user-manager
-          predicates:
-            - Path=/user/**
+#  cloud:
+#    nacos:
+#      config:
+#        server-addr: 1.95.6.188:8848
+#        file-extension: yaml
+#    gateway:
+#      discovery:
+#        locator:
+#          enabled: true
+#          lower-case-service-id: true
+#      routes:
+#        - id: user-manager
+#          uri:  lb://user-manager
+#          predicates:
+#            - Path=/user/**
 server:
   port: 8080

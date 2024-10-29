@@ -11,6 +11,7 @@
     <modules>
         <module>getway-item</module>
         <module>userManage</module>
+        <module>running-manager</module>
     </modules>
 
     <properties>
