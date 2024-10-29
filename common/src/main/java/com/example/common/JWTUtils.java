@@ -50,7 +50,7 @@ public class JWTUtils {
         try {
             // 验证令牌
             DecodedJWT verify = JWTUtils.verify(token);
-            map.put("state",true);
+            map.put("state","true");
             map.put("msg","success");
             return map;
         } catch (SignatureVerificationException e) {
@@ -66,7 +66,7 @@ public class JWTUtils {
             e.printStackTrace();
             map.put("msg","token无效！");
         }
-        map.put("state",false);
+        map.put("state","false");
         return map;
     }
 
