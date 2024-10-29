@@ -12,6 +12,7 @@
         <module>getway-item</module>
         <module>userManage</module>
         <module>running-manager</module>
+        <module>common</module>
     </modules>
 
     <properties>
