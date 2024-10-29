@@ -35,10 +35,10 @@ public class GlobalTokenFilter implements GlobalFilter, Ordered {
                 return chain.filter(exchange);
             }
         }catch (Exception e){
-            return denyAccess(exchange, HttpStateCode.BAD_REQUEST);
+            return denyAccess(exchange, HttpStateCode.INTERNAL_SERVER_ERROR);
         }
 
-        return denyAccess(exchange, HttpStateCode.INTERNAL_SERVER_ERROR);
+        return denyAccess(exchange, HttpStateCode.BAD_REQUEST);
     }
 
     @Override
