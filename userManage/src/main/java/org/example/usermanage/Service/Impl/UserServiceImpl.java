@@ -14,6 +14,9 @@ import java.util.List;
 
 import static com.baomidou.mybatisplus.core.toolkit.Wrappers.lambdaQuery;
 
+/**
+ * @author wzh
+ */
 @Service
 public class UserServiceImpl implements UserService {
     @Autowired
