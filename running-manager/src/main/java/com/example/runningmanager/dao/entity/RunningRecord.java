@@ -14,7 +14,7 @@ public class RunningRecord {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
-    private User user; // 用户ID，外键，关联到用户表
+    private User user_id; // 用户ID，外键，关联到用户表
 
     @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal distance; // 距离（千米），不能为空
@@ -59,11 +59,11 @@ public class RunningRecord {
     }
 
     public User getUser() {
-        return user;
+        return user_id;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setUser(User user_id) {
+        this.user_id = user_id;
     }
 
     public BigDecimal getDistance() {
