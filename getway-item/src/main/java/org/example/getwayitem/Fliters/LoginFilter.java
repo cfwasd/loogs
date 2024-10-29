@@ -8,6 +8,9 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
+/**
+ * @author wzh
+ */
 @Component
 public class LoginFilter implements GlobalFilter, Ordered {
 

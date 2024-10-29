@@ -1,0 +1,21 @@
+spring:
+  application:
+    name: gateway-item
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 1.95.6.188:8848
+      config:
+        server-addr: 1.95.6.188:8848
+        file-extension: yaml # 此处为配置使用的后缀名
+        group: DEFAULT_GROUP
+        auto-refresh: true
+      gateway:
+        discovery:
+          locator:
+            enabled: true
+            lower-case-service-id: true
+
+logging:
+  level:
+    com.alibaba.cloud.nacos: debug
