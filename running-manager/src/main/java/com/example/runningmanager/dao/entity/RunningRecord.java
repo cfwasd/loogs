@@ -12,9 +12,8 @@ public class RunningRecord {
     @Column(name = "record_id")
     private Long recordId; // 记录ID，主键，自增
 
-    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
-    private User user_id; // 用户ID，外键，关联到用户表
+    private Long userId; // 用户ID，外键，关联到用户表
 
     @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal distance; // 距离（千米），不能为空
@@ -58,12 +57,12 @@ public class RunningRecord {
         this.recordId = recordId;
     }
 
-    public User getUser() {
-        return user_id;
+    public Long getUserId() {
+        return userId;
     }
 
-    public void setUser(User user_id) {
-        this.user_id = user_id;
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 
     public BigDecimal getDistance() {
@@ -144,5 +143,23 @@ public class RunningRecord {
 
     public void setUpdatedAt(Date updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    @Override
+    public String toString() {
+        return "RunningRecord{" +
+                "recordId=" + recordId +
+                ", user_id=" + userId +
+                ", distance=" + distance +
+                ", duration=" + duration +
+                ", startLocationLat=" + startLocationLat +
+                ", startLocationLon=" + startLocationLon +
+                ", endLocationLat=" + endLocationLat +
+                ", endLocationLon=" + endLocationLon +
+                ", averageSpeed=" + averageSpeed +
+                ", date=" + date +
+                ", createdAt=" + createdAt +
+                ", updatedAt=" + updatedAt +
+                '}';
     }
 }
