@@ -2,6 +2,15 @@ server:
   tomcat:
     connection-timeout: 20000
   port: 8081
+logging:
+  file:
+    path: /log/user-manager
+    name: user-manager.log
+  level:
+    root: info
+  logback:
+    rollingpolicy:
+      max-file-size: 10MB
 #spring:
 #  application:
 #    name: user-manager

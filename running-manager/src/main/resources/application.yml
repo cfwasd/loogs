@@ -5,3 +5,13 @@ server:
   tomcat:
     connection-timeout: 20000
   port: 8083
+
+logging:
+  file:
+    path: /log/running-manager
+    name: running-manager.log
+  level:
+    root: info
+  logback:
+    rollingpolicy:
+      max-file-size: 10MB

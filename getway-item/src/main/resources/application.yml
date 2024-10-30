@@ -1,6 +1,15 @@
 spring:
   application:
     name: gateway-item
+logging:
+  file:
+    path: /log/gateway-item
+    name: gateway-item.log
+  level:
+    root: info
+  logback:
+    rollingpolicy:
+      max-file-size: 10MB
 #  main:
 #    web-application-type: reactive
 #  cloud:
