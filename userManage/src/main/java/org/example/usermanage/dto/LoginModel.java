@@ -7,7 +7,6 @@ import lombok.Data;
  */
 @Data
 public class LoginModel {
-    private String userId;
-    private String userName;
+    private String username;
     private String password;
 }

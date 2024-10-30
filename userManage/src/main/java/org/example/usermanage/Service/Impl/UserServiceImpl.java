@@ -52,7 +52,8 @@ public class UserServiceImpl implements UserService {
     }
 
     public ResponseResult login(LoginModel loginModel) {
-        Users user = userMapper.selectOne(new QueryWrapper<Users>().eq("username",loginModel.getUserName()));
+        System.out.println(loginModel.toString());
+        Users user = userMapper.selectOne(new QueryWrapper<Users>().eq("username",loginModel.getUsername()));
         if (user==null) {
             return new ResponseResult(HttpStateCode.BAD_REQUEST.getCode(), "用户名不存在", null);
         }

@@ -1,4 +1,6 @@
 server:
+  tomcat:
+    connection-timeout: 20000
   port: 8081
 #spring:
 #  application:

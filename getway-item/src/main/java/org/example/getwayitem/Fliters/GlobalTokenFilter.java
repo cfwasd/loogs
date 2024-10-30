@@ -28,13 +28,13 @@ public class GlobalTokenFilter implements GlobalFilter, Ordered {
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
         try {
-
             ServerHttpRequest request = exchange.getRequest();
             String url = request.getPath().toString();
             if ("/api/user/login".equals(url) || "/api/user/register".equals(url)){
                 return chain.filter(exchange);
             }
-            String token = request.getHeaders().get("token").toString();
+            String token = request.getHeaders().get("token").get(0);
+            System.out.println(token);
             Map<String, Object> map = JWTUtils.checkLog(token);
             if ("true".equals(map.get("state"))) {
                 return chain.filter(exchange);
