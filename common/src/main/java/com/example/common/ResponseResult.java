@@ -1,4 +1,4 @@
-package com.example.runningmanager.dao.dto;
+package com.example.common;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -6,9 +6,7 @@ import lombok.Data;
 import java.io.Serializable;
 
 /**
- * 统一的公共响应体
- * @author NULL
- * @date 2019-07-16
+ * @author wzh
  */
 @Data
 @AllArgsConstructor

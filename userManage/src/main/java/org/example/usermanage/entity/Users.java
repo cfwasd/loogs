@@ -1,5 +1,9 @@
 package org.example.usermanage.entity;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
 
 import java.util.Date;
@@ -12,29 +16,32 @@ import java.io.Serializable;
  * @author makejava
  * @since 2024-10-11 15:47:33
  */
-@SuppressWarnings("serial")
+@TableName("users")
 public class Users extends Model<Users> {
 
+    @TableId(value = "user_id",type = IdType.AUTO)
     private String userId;
 
-    private String openId;
-
-    private String nickname;
-
-    private String avatarUrl;
-
-    private String studentId;
-
-    private String academy;
-
-    private String clasz;
-
+    @TableField("username")
     private String userName;
 
+    @TableField("email")
+    private String email;
+
+    @TableField("password")
+    private String password;
+
+    @TableField("created_at")
     private Date createdAt;
 
+    @TableField("updated_at")
     private Date updatedAt;
 
+    @TableField("student_id")
+    private String studentId;
+
+    @TableField("salt")
+    private String salt;
 
     public String getUserId() {
         return userId;
@@ -44,60 +51,28 @@ public class Users extends Model<Users> {
         this.userId = userId;
     }
 
-    public String getOpenId() {
-        return openId;
-    }
-
-    public void setOpenId(String openId) {
-        this.openId = openId;
-    }
-
-    public String getNickname() {
-        return nickname;
-    }
-
-    public void setNickname(String nickname) {
-        this.nickname = nickname;
-    }
-
-    public String getAvatarUrl() {
-        return avatarUrl;
-    }
-
-    public void setAvatarUrl(String avatarUrl) {
-        this.avatarUrl = avatarUrl;
-    }
-
-    public String getStudentId() {
-        return studentId;
-    }
-
-    public void setStudentId(String studentId) {
-        this.studentId = studentId;
-    }
-
-    public String getAcademy() {
-        return academy;
-    }
-
-    public void setAcademy(String academy) {
-        this.academy = academy;
-    }
-
-    public String getClasz() {
-        return clasz;
-    }
-
-    public void setClasz(String clasz) {
-        this.clasz = clasz;
-    }
-
     public String getUserName() {
         return userName;
     }
 
     public void setUserName(String userName) {
         this.userName = userName;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public Date getCreatedAt() {
@@ -116,31 +91,56 @@ public class Users extends Model<Users> {
         this.updatedAt = updatedAt;
     }
 
+    public String getStudentId() {
+        return studentId;
+    }
+
+    public void setStudentId(String studentId) {
+        this.studentId = studentId;
+    }
+    public String getSalt() {
+        return salt;
+    }
+    public void setSalt(String salt) {
+        this.salt = salt;
+    }
+
+    public Users(String userId, String userName, String email, String password, Date createdAt, Date updatedAt, String studentId, String salt) {
+        this.userId = userId;
+        this.userName = userName;
+        this.email = email;
+        this.password = password;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
+        this.studentId = studentId;
+        this.salt = salt;
+    }
+
+    public Users(String userName, String email, String password, Date createdAt, Date updatedAt, String studentId, String salt) {
+        this.userName = userName;
+        this.email = email;
+        this.password = password;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
+        this.studentId = studentId;
+        this.salt = salt;
+    }
+
+    public Users() {
+    }
+
     @Override
     public String toString() {
         return "Users{" +
                 "userId='" + userId + '\'' +
-                ", openId='" + openId + '\'' +
-                ", nickname='" + nickname + '\'' +
-                ", avatarUrl='" + avatarUrl + '\'' +
-                ", studentId='" + studentId + '\'' +
-                ", academy='" + academy + '\'' +
-                ", clasz='" + clasz + '\'' +
                 ", userName='" + userName + '\'' +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
                 ", createdAt=" + createdAt +
                 ", updatedAt=" + updatedAt +
+                ", studentId='" + studentId + '\'' +
+                ", salt='" + salt + '\'' +
                 '}';
-    }
-
-    public Users(String userId, String openId, String nickname, String avatarUrl, String studentId, String academy, String clasz, String userName) {
-        this.userId = userId;
-        this.openId = openId;
-        this.nickname = nickname;
-        this.avatarUrl = avatarUrl;
-        this.studentId = studentId;
-        this.academy = academy;
-        this.clasz = clasz;
-        this.userName = userName;
     }
 
     /**

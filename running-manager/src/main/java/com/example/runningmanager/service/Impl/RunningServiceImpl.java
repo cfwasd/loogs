@@ -1,6 +1,7 @@
 package com.example.runningmanager.service.Impl;
 
-import com.example.runningmanager.dao.dto.ResponseResult;
+
+import com.example.common.ResponseResult;
 import com.example.runningmanager.dao.entity.RunningRecord;
 import com.example.runningmanager.mapper.RunningMapper;
 import com.example.runningmanager.service.RunningService;

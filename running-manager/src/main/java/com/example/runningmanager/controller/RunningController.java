@@ -1,10 +1,10 @@
 package com.example.runningmanager.controller;
 
-import com.example.runningmanager.dao.dto.ResponseResult;
 import com.example.runningmanager.dao.entity.RunningRecord;
 import com.example.runningmanager.service.Impl.RunningServiceImpl;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+import com.example.common.ResponseResult;
 
 @RestController
 @AllArgsConstructor
