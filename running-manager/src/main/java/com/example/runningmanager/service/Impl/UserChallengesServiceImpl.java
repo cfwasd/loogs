@@ -18,20 +18,21 @@ public class UserChallengesServiceImpl implements UserChallengesService {
     // 实现用户添加挑战
     @Override
     public ResponseResult joinChallenge(UserChallenge userChallenge) {
-        if(userChallenge != null){
+        if(userChallenge == null){
             return new ResponseResult(500, "参数错误", null);
         }else {
-            int is;
-            try {
-                is = userChallengesMapper.insert(userChallenge);
+            int is=0;
+//            try {
+                is = userChallengesMapper.insertUserChallenges(userChallenge);
                 if(is == 1){
                     return new ResponseResult(200, "添加成功", null);
                 }else {
                     return new ResponseResult(500, "添加失败", null);
                 }
-            }catch (Exception e){
-                return new ResponseResult(500, "服务端错误", null);
-            }
+//            }catch (Exception e){
+//                System.out.println(e);
+//                return new ResponseResult(500, "服务端错误", null);
+//            }
         }
     }
 
@@ -57,18 +58,19 @@ public class UserChallengesServiceImpl implements UserChallengesService {
     public ResponseResult updateUserChallenges(UserChallenge userChallenge) {
         if(userChallenge != null){
             int is;
-            try {
-                is = userChallengesMapper.updateById(userChallenge);
+//            try {
+                is = userChallengesMapper.updateUserChallenges(userChallenge);
                 if(is == 1){
                     return new ResponseResult(200, "更新成功", null);
                 }else {
                     return new ResponseResult(500, "更新失败", null);
                 }
-            }catch (Exception e){
-                return new ResponseResult(500, "服务端错误", null);
-            }
+//            }catch (Exception e){
+//                return new ResponseResult(500, "服务端错误", null);
+//            }
         }else {
             return new ResponseResult(500, "参数错误", null);
         }
     }
+
 }

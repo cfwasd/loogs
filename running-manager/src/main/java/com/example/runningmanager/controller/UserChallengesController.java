@@ -17,6 +17,7 @@ public class UserChallengesController {
     // 用户参与挑战
     @PostMapping("/join")
     public ResponseResult joinChallenge(@RequestBody UserChallenge userChallenge) {
+        System.out.println(userChallenge.toString());
         return userChallengesService.joinChallenge(userChallenge);
     }
 

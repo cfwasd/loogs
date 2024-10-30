@@ -17,9 +17,10 @@ public class RunningServiceImpl implements RunningService {
     //创建跑步记录
     @Override
     public ResponseResult createRunningRecord(RunningRecord runningRecord) {
+        System.out.println(runningRecord.toString());
         int is;
         if(runningRecord != null){
-            is= runningMapper.insert(runningRecord);
+            is= runningMapper.insertRunningRecord(runningRecord);
         }else {
             return new ResponseResult(500, "参数为空", null);
         }
@@ -51,7 +52,7 @@ public class RunningServiceImpl implements RunningService {
     public ResponseResult updateRunningRecord(RunningRecord runningRecord) {
         int is;
         if(runningRecord != null){
-            is= runningMapper.updateById(runningRecord);
+            is= runningMapper.updateRunningRecord(runningRecord);
         }else {
             return new ResponseResult(500, "参数为空", null);
         }
@@ -66,7 +67,7 @@ public class RunningServiceImpl implements RunningService {
     @Override
     public ResponseResult deleteRunningRecord(Long recordId) {
         if(recordId != null){
-            int is = runningMapper.deleteById(recordId);
+            int is = runningMapper.deleteRunningRecord(recordId);
             if(is == 1){
                 return new ResponseResult(200, "删除成功", null);
             }else {
