@@ -1,10 +1,6 @@
-server:
-  tomcat:
-    connection-timeout: 20000
-
 spring:
   application:
-    name: running-manager
+    name: gateway-item
   cloud:
     nacos:
       discovery:
