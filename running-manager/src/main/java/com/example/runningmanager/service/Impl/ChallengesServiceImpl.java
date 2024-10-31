@@ -1,6 +1,7 @@
 package com.example.runningmanager.service.Impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.example.common.HttpStateCode;
 import com.example.common.ResponseResult;
 import com.example.runningmanager.dao.entity.Challenge;
 import com.example.runningmanager.mapper.ChallengesMapper;
@@ -19,9 +20,9 @@ public class ChallengesServiceImpl implements ChallengesService {
     public ResponseResult selectChallenges() {
         List<Challenge> challenges = challengesMapper.selectChallenges();
         if (challenges.isEmpty()){
-            return new ResponseResult(500, "数据不存在", null);
+            return new ResponseResult(HttpStateCode.INTERNAL_SERVER_ERROR.getCode(), "数据不存在", null);
         }else {
-            return new ResponseResult(200, "查询成功", challenges);
+            return new ResponseResult(HttpStateCode.OK.getCode(), "查询成功", challenges);
         }
     }
 }

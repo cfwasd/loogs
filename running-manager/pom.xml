@@ -7,6 +7,7 @@
         <artifactId>Loogs</artifactId>
         <groupId>org.example</groupId>
         <version>1.0-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
     </parent>
     <groupId>com.example</groupId>
     <artifactId>running-manager</artifactId>
@@ -24,6 +25,7 @@
             <groupId>com.example</groupId>
             <artifactId>common</artifactId>
             <version>0.0.1-SNAPSHOT</version>
+
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -97,11 +99,10 @@
                 <version>${spring-boot.version}</version>
                 <configuration>
                     <mainClass>com.example.runningmanager.RunningManagerApplication</mainClass>
-                    <skip>true</skip>
+                    <layout>ZIP</layout>
                 </configuration>
                 <executions>
                     <execution>
-                        <id>repackage</id>
                         <goals>
                             <goal>repackage</goal>
                         </goals>

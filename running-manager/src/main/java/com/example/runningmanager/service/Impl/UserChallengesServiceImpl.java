@@ -1,5 +1,6 @@
 package com.example.runningmanager.service.Impl;
 
+import com.example.common.HttpStateCode;
 import com.example.common.ResponseResult;
 import com.example.runningmanager.dao.entity.UserChallenge;
 import com.example.runningmanager.mapper.UserChallengesMapper;
@@ -19,20 +20,19 @@ public class UserChallengesServiceImpl implements UserChallengesService {
     @Override
     public ResponseResult joinChallenge(UserChallenge userChallenge) {
         if(userChallenge == null){
-            return new ResponseResult(500, "参数错误", null);
+            return new ResponseResult(HttpStateCode.BAD_REQUEST.getCode(), "参数错误", null);
         }else {
             int is=0;
-//            try {
+            try {
                 is = userChallengesMapper.insertUserChallenges(userChallenge);
                 if(is == 1){
-                    return new ResponseResult(200, "添加成功", null);
+                    return new ResponseResult(HttpStateCode.OK.getCode(), "添加成功", null);
                 }else {
-                    return new ResponseResult(500, "添加失败", null);
+                    return new ResponseResult(HttpStateCode.INTERNAL_SERVER_ERROR.getCode(), "添加失败", null);
                 }
-//            }catch (Exception e){
-//                System.out.println(e);
-//                return new ResponseResult(500, "服务端错误", null);
-//            }
+            }catch (Exception e){
+                return new ResponseResult(HttpStateCode.INTERNAL_SERVER_ERROR.getCode(), "服务端错误", null);
+            }
         }
     }
 
@@ -43,12 +43,12 @@ public class UserChallengesServiceImpl implements UserChallengesService {
         if(userId != null){
             List<UserChallenge> userChallenges = userChallengesMapper.selectUserChallenges(userId);
             if(!userChallenges.isEmpty()){
-                return new ResponseResult(200, "查询成功", userChallenges);
+                return new ResponseResult(HttpStateCode.OK.getCode(), "查询成功", userChallenges);
             }else {
-                return new ResponseResult(500, "数据不存在", null);
+                return new ResponseResult(HttpStateCode.BAD_REQUEST.getCode(), "数据不存在", null);
             }
         }else {
-            return new ResponseResult(500, "参数错误", null);
+            return new ResponseResult(HttpStateCode.INTERNAL_SERVER_ERROR.getCode(), "参数错误", null);
         }
     }
 
@@ -58,18 +58,18 @@ public class UserChallengesServiceImpl implements UserChallengesService {
     public ResponseResult updateUserChallenges(UserChallenge userChallenge) {
         if(userChallenge != null){
             int is;
-//            try {
+            try {
                 is = userChallengesMapper.updateUserChallenges(userChallenge);
                 if(is == 1){
-                    return new ResponseResult(200, "更新成功", null);
+                    return new ResponseResult(HttpStateCode.OK.getCode(), "更新成功", null);
                 }else {
-                    return new ResponseResult(500, "更新失败", null);
+                    return new ResponseResult(HttpStateCode.BAD_REQUEST.getCode(), "更新失败", null);
                 }
-//            }catch (Exception e){
-//                return new ResponseResult(500, "服务端错误", null);
-//            }
+            }catch (Exception e){
+                return new ResponseResult(HttpStateCode.INTERNAL_SERVER_ERROR.getCode(), "服务端错误", null);
+            }
         }else {
-            return new ResponseResult(500, "参数错误", null);
+            return new ResponseResult(HttpStateCode.BAD_REQUEST.getCode(), "参数错误", null);
         }
     }
 

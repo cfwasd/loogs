@@ -36,6 +36,7 @@ public class UserServiceImpl implements UserService {
     public Users selectByUserId(String userId) {
         return userMapper.selectOne(new QueryWrapper<Users>().eq("user_id",userId));
     }
+    @Override
     //新增数据
     public boolean insert(Users users) {
         return userMapper.insert(users)>0;
@@ -47,12 +48,14 @@ public class UserServiceImpl implements UserService {
         Page<Users> userpage = new Page<>(query.getPage(), query.getPageSize());
         //排序条件
         userpage.addOrder(new OrderItem(query.getSort(),query.getAsc()));
-        Page<Users> Users  = userMapper.selectPage(userpage,lambdaQuery());
-        return Users.getRecords();
+        Page<Users> users = userMapper.selectPage(userpage,lambdaQuery());
+        return users.getRecords();
     }
-
+    @Override
     public ResponseResult login(LoginModel loginModel) {
-        System.out.println(loginModel.toString());
+        if (loginModel == null){
+            return new ResponseResult(HttpStateCode.BAD_REQUEST.getCode(), "参数错误", null);
+        }
         Users user = userMapper.selectOne(new QueryWrapper<Users>().eq("username",loginModel.getUsername()));
         if (user==null) {
             return new ResponseResult(HttpStateCode.BAD_REQUEST.getCode(), "用户名不存在", null);
@@ -66,13 +69,18 @@ public class UserServiceImpl implements UserService {
         String token = JWTUtils.getToken(map);
         return new ResponseResult(HttpStateCode.OK.getCode(), "登录成功",token);
     }
+    @Override
     public ResponseResult register(RegisterModel registerModel) {
         if (registerModel == null) {
             return new ResponseResult(HttpStateCode.BAD_REQUEST.getCode(), "参数错误", null);
         }
+        Users users = userMapper.selectOne(new QueryWrapper<Users>().eq("username",registerModel.getUsername()));
+        if (users != null){
+            return new ResponseResult(HttpStateCode.BAD_REQUEST.getCode(), "用户名已存在", null);
+        }
         String salt = RandomStringUtils.randomAlphanumeric(6);
         String pwd = DigestUtils.md5DigestAsHex((registerModel.getPassword() + salt).getBytes());
-        Users user = new Users(registerModel.getUserName(), registerModel.getEmail(), pwd, new Date(), new Date(), registerModel.getStudentId(), salt);
+        Users user = new Users(registerModel.getUsername(), registerModel.getEmail(), pwd, new Date(), new Date(), registerModel.getStudentId(), salt);
         int count = 0;
         try {
             count = userMapper.insert(user);

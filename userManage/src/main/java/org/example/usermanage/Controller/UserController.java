@@ -1,6 +1,7 @@
 package org.example.usermanage.Controller;
 
 import com.example.common.ResponseResult;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.example.usermanage.Service.Impl.UserServiceImpl;
 import org.example.usermanage.dto.LoginModel;
 import org.example.usermanage.dto.RegisterModel;

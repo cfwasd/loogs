@@ -33,17 +33,21 @@ public class GlobalTokenFilter implements GlobalFilter, Ordered {
             if ("/api/user/login".equals(url) || "/api/user/register".equals(url)){
                 return chain.filter(exchange);
             }
-            String token = request.getHeaders().get("token").get(0);
-            System.out.println(token);
+            String token = "";
+            try {
+                token = request.getHeaders().get("token").get(0);
+            }catch (Exception e){
+                return denyAccess(exchange, HttpStateCode.BAD_REQUEST, "没有访问权限");
+            }
             Map<String, Object> map = JWTUtils.checkLog(token);
             if ("true".equals(map.get("state"))) {
                 return chain.filter(exchange);
             }
         }catch (Exception e){
-            return denyAccess(exchange, HttpStateCode.INTERNAL_SERVER_ERROR);
+            return denyAccess(exchange, HttpStateCode.INTERNAL_SERVER_ERROR,"服务端错误");
         }
 
-        return denyAccess(exchange, HttpStateCode.BAD_REQUEST);
+        return denyAccess(exchange, HttpStateCode.BAD_REQUEST, "没有访问权限");
     }
 
     @Override
@@ -52,12 +56,12 @@ public class GlobalTokenFilter implements GlobalFilter, Ordered {
     }
 
     @SneakyThrows
-    private Mono<Void> denyAccess(ServerWebExchange exchange, HttpStateCode resultCode) {
+    private Mono<Void> denyAccess(ServerWebExchange exchange, HttpStateCode resultCode,String msg) {
         ServerHttpResponse response = exchange.getResponse();
         response.setStatusCode(HttpStatus.OK);
         //这里在返回头添加编码，否则中文会乱码
         response.getHeaders().add("Content-Type", "application/json;charset=UTF-8");
-        Map<String, Object> result = Map.of("code", resultCode.getCode(), "msg", resultCode.getDescription());
+        Map<String, Object> result = Map.of("code", resultCode.getCode(), "msg", msg);
         byte[] bytes = mapper.writeValueAsBytes(result);
         DataBuffer buffer = response.bufferFactory().wrap(bytes);
         return response.writeWith(Mono.just(buffer));
