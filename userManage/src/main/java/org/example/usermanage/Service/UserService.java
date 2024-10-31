@@ -7,6 +7,6 @@ import org.example.usermanage.entity.Users;
 
 public interface UserService {
     boolean insert(Users users);
-    ResponseResult login(LoginModel loginModel);
+    ResponseResult login(String id);
     ResponseResult register(RegisterModel registerModel);
 }

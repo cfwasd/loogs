@@ -30,7 +30,11 @@ public class GlobalTokenFilter implements GlobalFilter, Ordered {
         try {
             ServerHttpRequest request = exchange.getRequest();
             String url = request.getPath().toString();
-            if ("/api/user/login".equals(url) || "/api/user/register".equals(url)){
+
+            // 检查是否匹配
+            boolean isMatch = url.contains("/api/user/login");
+            System.out.println(url+":"+isMatch);
+            if (isMatch || "/api/user/register".equals(url) || "/api/user/getSecret".equals(url)){
                 return chain.filter(exchange);
             }
             String token = "";

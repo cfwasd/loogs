@@ -52,22 +52,25 @@ public class UserServiceImpl implements UserService {
         return users.getRecords();
     }
     @Override
-    public ResponseResult login(LoginModel loginModel) {
-        if (loginModel == null){
+    public ResponseResult login(String id) {
+
+        if (("").equals(id)){
             return new ResponseResult(HttpStateCode.BAD_REQUEST.getCode(), "参数错误", null);
         }
-        Users user = userMapper.selectOne(new QueryWrapper<Users>().eq("username",loginModel.getUsername()));
+        Users user = userMapper.selectOne(new QueryWrapper<Users>().eq("openid",id));
         if (user==null) {
             return new ResponseResult(HttpStateCode.BAD_REQUEST.getCode(), "用户名不存在", null);
         }
-        String pwd = DigestUtils.md5DigestAsHex((loginModel.getPassword() + user.getSalt()).getBytes());
-        if (!user.getPassword().equals(pwd)) {
+        if (!user.getOpenid().equals(id)) {
             return new ResponseResult(HttpStateCode.BAD_REQUEST.getCode(), "密码错误", null);
         }
         Map<String, String> map = new HashMap<>();
         map.put("userName",user.getUserName());
         String token = JWTUtils.getToken(map);
-        return new ResponseResult(HttpStateCode.OK.getCode(), "登录成功",token);
+        Map<String, Object> map1 = new HashMap<>();
+        map1.put("token",token);
+        map1.put("userInfo",user);
+        return new ResponseResult(HttpStateCode.OK.getCode(), "登录成功",map1);
     }
     @Override
     public ResponseResult register(RegisterModel registerModel) {

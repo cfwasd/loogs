@@ -40,8 +40,8 @@ public class Users extends Model<Users> {
     @TableField("student_id")
     private String studentId;
 
-    @TableField("salt")
-    private String salt;
+    @TableField("openid")
+    private String openid;
 
     public String getUserId() {
         return userId;
@@ -98,14 +98,14 @@ public class Users extends Model<Users> {
     public void setStudentId(String studentId) {
         this.studentId = studentId;
     }
-    public String getSalt() {
-        return salt;
+    public String getOpenid() {
+        return openid;
     }
-    public void setSalt(String salt) {
-        this.salt = salt;
+    public void setOpenid(String openid) {
+        this.openid = openid;
     }
 
-    public Users(String userId, String userName, String email, String password, Date createdAt, Date updatedAt, String studentId, String salt) {
+    public Users(String userId, String userName, String email, String password, Date createdAt, Date updatedAt, String studentId, String openid) {
         this.userId = userId;
         this.userName = userName;
         this.email = email;
@@ -113,17 +113,17 @@ public class Users extends Model<Users> {
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
         this.studentId = studentId;
-        this.salt = salt;
+        this.openid = openid;
     }
 
-    public Users(String userName, String email, String password, Date createdAt, Date updatedAt, String studentId, String salt) {
+    public Users(String userName, String email, String password, Date createdAt, Date updatedAt, String studentId, String openid) {
         this.userName = userName;
         this.email = email;
         this.password = password;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
         this.studentId = studentId;
-        this.salt = salt;
+        this.openid = openid;
     }
 
     public Users() {
@@ -139,7 +139,7 @@ public class Users extends Model<Users> {
                 ", createdAt=" + createdAt +
                 ", updatedAt=" + updatedAt +
                 ", studentId='" + studentId + '\'' +
-                ", salt='" + salt + '\'' +
+                ", openid='" + openid + '\'' +
                 '}';
     }
 

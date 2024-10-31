@@ -8,10 +8,7 @@ import org.example.usermanage.dto.RegisterModel;
 import org.example.usermanage.entity.Users;
 import org.example.usermanage.query.PageQuery;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -25,13 +22,17 @@ public class UserController {
         return userService.selectByPage(query);
     }
     //登录
-    @PostMapping("/login")
-    public ResponseResult login(@RequestBody LoginModel loginModel) {
-        return userService.login(loginModel);
+    @GetMapping("/login/{id}")
+    public ResponseResult login(@PathVariable("id")String id ) {
+        return userService.login(id);
     }
     //注册
     @PostMapping("/register")
     public ResponseResult register(@RequestBody RegisterModel registerModel) {
         return userService.register(registerModel);
+    }
+    @GetMapping("/getSecret")
+    public String getSecret() {
+        return "appid=wxc86810d05349cc13&secret=c1462fa93713c76b51ef4b8ca9f7f4ee";
     }
 }
