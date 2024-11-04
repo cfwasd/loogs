@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/running-manager/running-manager.iml" filepath="$PROJECT_DIR$/running-manager/running-manager.iml" />
+      <module fileurl="file://$PROJECT_DIR$/userManage/userManage.iml" filepath="$PROJECT_DIR$/userManage/userManage.iml" />
     </modules>
   </component>
 </project>

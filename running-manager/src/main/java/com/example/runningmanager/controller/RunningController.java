@@ -32,5 +32,25 @@ public class RunningController {
         return runningService.deleteRunningRecord(recordId);
     }
 
+    //获取微信步数
+    @PostMapping("/getWxStep")
+    public ResponseResult getWxStep(@RequestBody com.example.common.stepCountVO stepCountVO){
+        return runningService.getWxStep(stepCountVO);
+    }
+
+    //保存今日步数
+    @PostMapping("/saveTodayStep")
+    public ResponseResult saveTodayStep(@RequestBody com.example.common.UserNewRunDataVO userNewRunDataVO){
+        return runningService.saveTodayStep(userNewRunDataVO);
+    }
+
+    //查询运动信息
+    @GetMapping("/getUserTodayStep/{userId}")
+    public ResponseResult selectByUserIdAndDay(@PathVariable("userId") Integer userId){
+        return runningService.selectByUserIdAndDay(userId);
+    }
+
+
+
 }
 

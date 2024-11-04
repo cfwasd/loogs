@@ -3,18 +3,25 @@ package com.example.runningmanager.service.Impl;
 
 import com.example.common.HttpStateCode;
 import com.example.common.ResponseResult;
+import com.example.common.UserNewRunDataVO;
+import com.example.common.stepCountVO;
 import com.example.runningmanager.dao.entity.RunningRecord;
+import com.example.runningmanager.dao.entity.UserRunData;
 import com.example.runningmanager.mapper.RunningMapper;
 import com.example.runningmanager.service.RunningService;
+import com.example.runningmanager.utils.WeRunDecryptUtil;
+import com.example.runningmanager.utils.WeRunRedisUtil;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 @Service
 @AllArgsConstructor
 public class RunningServiceImpl implements RunningService {
     private RunningMapper runningMapper;
+    private WeRunRedisUtil weRunRedisUtil;
     //创建跑步记录
     @Override
     public ResponseResult createRunningRecord(RunningRecord runningRecord) {
@@ -77,6 +84,58 @@ public class RunningServiceImpl implements RunningService {
             return new ResponseResult(HttpStateCode.INTERNAL_SERVER_ERROR.getCode(), "参数为空", null);
         }
     }
+
+    //获取微信步数
+    @Override
+    public ResponseResult getWxStep(stepCountVO stepCountVO) {
+        WeRunDecryptUtil weRunDecryptUtil = new WeRunDecryptUtil();
+        try {
+            String sessionKey =weRunDecryptUtil.getSessionKey(stepCountVO.getCode());
+            Map<String, Object> decryptData = weRunDecryptUtil.decryptData(stepCountVO.getEncryptedData(), stepCountVO.getIv(), sessionKey);
+            if(decryptData != null){
+                return new ResponseResult(HttpStateCode.OK.getCode(), "查询成功", decryptData);
+            }else {
+                return new ResponseResult(HttpStateCode.INTERNAL_SERVER_ERROR.getCode(), "服务端错误", null);
+            }
+        } catch (Exception e) {
+            return new ResponseResult(HttpStateCode.INTERNAL_SERVER_ERROR.getCode(), "服务端异常，请联系管理员", null);
+        }
+    }
+
+    //存储今日运动信
+    @Override
+    public ResponseResult saveTodayStep(UserNewRunDataVO userNewRunDataVO) {
+        int i = weRunRedisUtil.saveUserWeRunData(userNewRunDataVO.getUserId(), userNewRunDataVO.getStepCount());
+        if(i == 1){
+            return new ResponseResult(HttpStateCode.OK.getCode(), "存储成功", null);
+        }else {
+            return new ResponseResult(HttpStateCode.INTERNAL_SERVER_ERROR.getCode(), "服务端错误", null);
+        }
+    }
+
+    //查询运动信息
+    @Override
+    public ResponseResult selectByUserIdAndDay(Integer userId) {
+        if(userId == null){
+            return new ResponseResult(HttpStateCode.INTERNAL_SERVER_ERROR.getCode(), "参数为空", null);
+        }
+        //获取redis中的用户数据
+        Map<Object,Object> userNewData  = weRunRedisUtil.getUserWeRunData(String.valueOf(userId));
+        if(userNewData != null){
+            //判断数据是否在redis中
+            if(userNewData.get("totalMileage")!= null){
+                return new ResponseResult(HttpStateCode.OK.getCode(), "查询成功", userNewData);
+            }else {
+                //如果没有添加数据到redis并返回
+                UserRunData userRunData = runningMapper.selectUserRunData(userId);
+                weRunRedisUtil.saveTotalMileageAndDay(String.valueOf(userId),String.valueOf(userRunData.getMileage()),String.valueOf(userRunData.getDay()));
+                userNewData = weRunRedisUtil.getUserWeRunData(String.valueOf(userId));
+                return new ResponseResult(HttpStateCode.OK.getCode(), "查询成功", userNewData);
+            }
+        }
+        return new ResponseResult(HttpStateCode.INTERNAL_SERVER_ERROR.getCode(), "服务端错误", null);
+    }
+
 
 }
 

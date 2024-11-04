@@ -2,6 +2,7 @@ package com.example.runningmanager.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.example.runningmanager.dao.entity.RunningRecord;
+import com.example.runningmanager.dao.entity.UserRunData;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
@@ -28,4 +29,8 @@ public interface RunningMapper extends BaseMapper<RunningRecord> {
     //删除跑步记录
     @Insert("delete from running_records where record_id = #{recordId}")
     public int deleteRunningRecord(Long recordId);
+
+    //查询用户运动信息
+    @Select("select * from user_run_data where user_id = #{userId}")
+    public UserRunData selectUserRunData(Integer userId);
 }

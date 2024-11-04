@@ -1,9 +1,7 @@
 package org.example.usermanage.Controller;
 
 import com.example.common.ResponseResult;
-import org.apache.commons.lang3.RandomStringUtils;
 import org.example.usermanage.Service.Impl.UserServiceImpl;
-import org.example.usermanage.dto.LoginModel;
 import org.example.usermanage.dto.RegisterModel;
 import org.example.usermanage.entity.Users;
 import org.example.usermanage.query.PageQuery;
@@ -28,10 +26,11 @@ public class UserController {
     }
     //注册
     @PostMapping("/register")
-    public ResponseResult register(@RequestBody RegisterModel registerModel) {
-        return userService.register(registerModel);
+    public ResponseResult register(@RequestBody Users users) {
+        return userService.register(users);
     }
-    @GetMapping("/getSecret")
+    //获取小程序的appid和secret
+    @PostMapping("/getSecret")
     public String getSecret() {
         return "appid=wxc86810d05349cc13&secret=c1462fa93713c76b51ef4b8ca9f7f4ee";
     }

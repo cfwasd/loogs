@@ -9,14 +9,13 @@ import com.example.common.ResponseResult;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.example.usermanage.Mapper.UserMapper;
 import org.example.usermanage.Service.UserService;
-import org.example.usermanage.dto.LoginModel;
 import org.example.usermanage.dto.RegisterModel;
 import org.example.usermanage.entity.Users;
 import org.example.usermanage.query.PageQuery;
+import org.example.usermanage.utils.WxLoginHttps;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
-import org.springframework.util.StringUtils;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -32,6 +31,8 @@ import static com.baomidou.mybatisplus.core.toolkit.Wrappers.lambdaQuery;
 public class UserServiceImpl implements UserService {
     @Autowired
     private UserMapper userMapper;
+
+
     //根和userID查询信息
     public Users selectByUserId(String userId) {
         return userMapper.selectOne(new QueryWrapper<Users>().eq("user_id",userId));
@@ -51,49 +52,51 @@ public class UserServiceImpl implements UserService {
         Page<Users> users = userMapper.selectPage(userpage,lambdaQuery());
         return users.getRecords();
     }
+    //用户登陆
     @Override
-    public ResponseResult login(String id) {
-
-        if (("").equals(id)){
+    public ResponseResult login(String openId) {
+        if (("").equals(openId)){
             return new ResponseResult(HttpStateCode.BAD_REQUEST.getCode(), "参数错误", null);
         }
-        Users user = userMapper.selectOne(new QueryWrapper<Users>().eq("openid",id));
+        Users user = userMapper.selectOne(new QueryWrapper<Users>().eq("open_id",openId));
         if (user==null) {
             return new ResponseResult(HttpStateCode.BAD_REQUEST.getCode(), "用户名不存在", null);
+        }else {
+            Map<String,String> logToken = new HashMap<>();
+            logToken.put("userId",user.getUserId().toString());
+            logToken.put("academy",user.getAcademy());
+            String token = JWTUtils.getToken(logToken);
+            return new ResponseResult(HttpStateCode.OK.getCode(), "登陆成功", token);
         }
-        if (!user.getOpenid().equals(id)) {
-            return new ResponseResult(HttpStateCode.BAD_REQUEST.getCode(), "密码错误", null);
-        }
-        Map<String, String> map = new HashMap<>();
-        map.put("userName",user.getUserName());
-        String token = JWTUtils.getToken(map);
-        Map<String, Object> map1 = new HashMap<>();
-        map1.put("token",token);
-        map1.put("userInfo",user);
-        return new ResponseResult(HttpStateCode.OK.getCode(), "登录成功",map1);
+
     }
+    //用户注册
     @Override
-    public ResponseResult register(RegisterModel registerModel) {
-        if (registerModel == null) {
+    public ResponseResult register(Users users) {
+        String openId = users.getOpenId();
+        if (users==null){
             return new ResponseResult(HttpStateCode.BAD_REQUEST.getCode(), "参数错误", null);
         }
-        Users users = userMapper.selectOne(new QueryWrapper<Users>().eq("username",registerModel.getUsername()));
-        if (users != null){
-            return new ResponseResult(HttpStateCode.BAD_REQUEST.getCode(), "用户名已存在", null);
+
+        if(users.getOpenId()==null){
+            WxLoginHttps wxLoginHttps = new WxLoginHttps();
+            users.setOpenId(wxLoginHttps.wiLog(users.getCode()).getWxlogin().getOpenid());
+            openId = users.getOpenId();
         }
-        String salt = RandomStringUtils.randomAlphanumeric(6);
-        String pwd = DigestUtils.md5DigestAsHex((registerModel.getPassword() + salt).getBytes());
-        Users user = new Users(registerModel.getUsername(), registerModel.getEmail(), pwd, new Date(), new Date(), registerModel.getStudentId(), salt);
-        int count = 0;
-        try {
-            count = userMapper.insert(user);
-        } catch (Exception e) {
-            return new ResponseResult(HttpStateCode.INTERNAL_SERVER_ERROR.getCode(), "服务器发生错误", null);
+        Users user = userMapper.selectByOpenId(openId);
+        if(user!=null){
+            return new ResponseResult(HttpStateCode.BAD_REQUEST.getCode(), "该微信已绑定了用户，直接登陆即可", null);
         }
-        if (count > 0) {
-            return new ResponseResult(HttpStateCode.OK.getCode(), "注册成功", null);
+        Users stuIs = userMapper.selectByStudentId(users.getStudentId());
+        if(stuIs!=null){
+            return new ResponseResult(HttpStateCode.BAD_REQUEST.getCode(), "该学号已绑定了微信", null);
+        }
+        int i = userMapper.insertUsers(users);
+        if(i==0){
+            return new ResponseResult(HttpStateCode.INTERNAL_SERVER_ERROR.getCode(), "注册失败", null);
         }else {
-            return new ResponseResult(HttpStateCode.BAD_REQUEST.getCode(), "用户名已存在", null);
+            return new ResponseResult(HttpStateCode.OK.getCode(), "注册成功", users.getOpenId());
         }
+
     }
 }

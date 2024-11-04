@@ -1,6 +1,6 @@
 spring:
   application:
-    name: gateway-item
+    name: user-manager
   cloud:
     nacos:
       discovery:
@@ -10,11 +10,6 @@ spring:
         file-extension: yaml # 此处为配置使用的后缀名
         group: DEFAULT_GROUP
         auto-refresh: true
-      gateway:
-        discovery:
-          locator:
-            enabled: true
-            lower-case-service-id: true
 
 logging:
   level:
