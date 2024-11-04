@@ -20,18 +20,18 @@ public class UserController {
         return userService.selectByPage(query);
     }
     //登录
-    @GetMapping("/login/{id}")
-    public ResponseResult login(@PathVariable("id")String id ) {
-        return userService.login(id);
+    @GetMapping("/login/{code}")
+    public ResponseResult login(@PathVariable("code")String code ) {
+        return userService.login(code);
     }
     //注册
     @PostMapping("/register")
     public ResponseResult register(@RequestBody Users users) {
         return userService.register(users);
     }
-    //获取小程序的appid和secret
-    @PostMapping("/getSecret")
-    public String getSecret() {
-        return "appid=wxc86810d05349cc13&secret=c1462fa93713c76b51ef4b8ca9f7f4ee";
+    //根据openId查询用户
+    @GetMapping("/selectByOpenId/{openId}")
+    public ResponseResult selectByOpenId(@PathVariable("openId")String openId) {
+        return userService.selectByOpenId(openId);
     }
 }

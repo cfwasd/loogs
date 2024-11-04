@@ -31,7 +31,7 @@ import static com.baomidou.mybatisplus.core.toolkit.Wrappers.lambdaQuery;
 public class UserServiceImpl implements UserService {
     @Autowired
     private UserMapper userMapper;
-
+    WxLoginHttps wxLoginHttps = new WxLoginHttps();
 
     //根和userID查询信息
     public Users selectByUserId(String userId) {
@@ -54,18 +54,20 @@ public class UserServiceImpl implements UserService {
     }
     //用户登陆
     @Override
-    public ResponseResult login(String openId) {
-        if (("").equals(openId)){
+    public ResponseResult login(String code) {
+        if (("").equals(code)){
             return new ResponseResult(HttpStateCode.BAD_REQUEST.getCode(), "参数错误", null);
         }
+        String openId = wxLoginHttps.wiLog(code).getWxlogin().getOpenid();
         Users user = userMapper.selectOne(new QueryWrapper<Users>().eq("open_id",openId));
         if (user==null) {
-            return new ResponseResult(HttpStateCode.BAD_REQUEST.getCode(), "用户名不存在", null);
+            return new ResponseResult(HttpStateCode.BAD_REQUEST.getCode(), "用户不存在", null);
         }else {
             Map<String,String> logToken = new HashMap<>();
             logToken.put("userId",user.getUserId().toString());
             logToken.put("academy",user.getAcademy());
             String token = JWTUtils.getToken(logToken);
+            System.out.println(user.toString());
             return new ResponseResult(HttpStateCode.OK.getCode(), "登陆成功", token);
         }
 
@@ -77,9 +79,8 @@ public class UserServiceImpl implements UserService {
         if (users==null){
             return new ResponseResult(HttpStateCode.BAD_REQUEST.getCode(), "参数错误", null);
         }
-
         if(users.getOpenId()==null){
-            WxLoginHttps wxLoginHttps = new WxLoginHttps();
+
             users.setOpenId(wxLoginHttps.wiLog(users.getCode()).getWxlogin().getOpenid());
             openId = users.getOpenId();
         }
@@ -95,8 +96,23 @@ public class UserServiceImpl implements UserService {
         if(i==0){
             return new ResponseResult(HttpStateCode.INTERNAL_SERVER_ERROR.getCode(), "注册失败", null);
         }else {
-            return new ResponseResult(HttpStateCode.OK.getCode(), "注册成功", users.getOpenId());
+            Map<String,String> logToken = new HashMap<>();
+            logToken.put("userId",users.getUserId().toString());
+            logToken.put("academy",users.getAcademy());
+            String token = JWTUtils.getToken(logToken);
+            return new ResponseResult(HttpStateCode.OK.getCode(), "注册成功",token);
         }
+    }
 
+    //根据openId查询用户
+    public ResponseResult selectByOpenId(String openId) {
+        if (("").equals(openId)){
+            return new ResponseResult(HttpStateCode.BAD_REQUEST.getCode(), "参数错误", null);
+        }
+        if(openId!=null){
+            Users user = userMapper.selectByOpenId(openId);
+            return new ResponseResult(HttpStateCode.OK.getCode(), "查询成功", user);
+        }
+        return new ResponseResult(HttpStateCode.INTERNAL_SERVER_ERROR.getCode(), "服务端错误", null);
     }
 }
