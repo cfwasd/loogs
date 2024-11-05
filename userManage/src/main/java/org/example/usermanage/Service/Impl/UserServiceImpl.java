@@ -1,23 +1,19 @@
 package org.example.usermanage.Service.Impl;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.OrderItem;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.common.HttpStateCode;
 import com.example.common.JWTUtils;
 import com.example.common.ResponseResult;
-import org.apache.commons.lang3.RandomStringUtils;
 import org.example.usermanage.Mapper.UserMapper;
 import org.example.usermanage.Service.UserService;
-import org.example.usermanage.dto.RegisterModel;
 import org.example.usermanage.entity.Users;
 import org.example.usermanage.query.PageQuery;
 import org.example.usermanage.utils.WxLoginHttps;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
-import org.springframework.util.DigestUtils;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,6 +27,9 @@ import static com.baomidou.mybatisplus.core.toolkit.Wrappers.lambdaQuery;
 public class UserServiceImpl implements UserService {
     @Autowired
     private UserMapper userMapper;
+    @Autowired
+    private RedisTemplate<String,String> redisTemplate;
+
     WxLoginHttps wxLoginHttps = new WxLoginHttps();
 
     //根和userID查询信息
@@ -67,21 +66,24 @@ public class UserServiceImpl implements UserService {
             logToken.put("userId",user.getUserId().toString());
             logToken.put("academy",user.getAcademy());
             String token = JWTUtils.getToken(logToken);
-            System.out.println(user.toString());
-            Map<String,String> map = new HashMap<>();
-            map.put("token",token);
-            map.put("openId",openId);
-            return new ResponseResult(HttpStateCode.OK.getCode(), "登陆成功", map);
+            if (setToken(token,"user")){
+                System.out.println(user);
+                Map<String,String> map = new HashMap<>();
+                map.put("token",token);
+                map.put("openId",openId);
+                return new ResponseResult(HttpStateCode.OK.getCode(), "登陆成功", map);
+            }
+            return new ResponseResult(HttpStateCode.INTERNAL_SERVER_ERROR.getCode(), "服务器异常，请稍后", null);
         }
 
     }
     //用户注册
     @Override
     public ResponseResult register(Users users) {
-        String openId = users.getOpenId();
         if (users==null){
             return new ResponseResult(HttpStateCode.BAD_REQUEST.getCode(), "参数错误", null);
         }
+        String openId = users.getOpenId();
         if(users.getOpenId()==null){
 
             users.setOpenId(wxLoginHttps.wiLog(users.getCode()).getWxlogin().getOpenid());
@@ -99,9 +101,11 @@ public class UserServiceImpl implements UserService {
         if(i==0){
             return new ResponseResult(HttpStateCode.INTERNAL_SERVER_ERROR.getCode(), "注册失败", null);
         }else {
+
             Map<String,String> logToken = new HashMap<>();
-            logToken.put("userId",users.getUserId().toString());
-            logToken.put("academy",users.getAcademy());
+//            logToken.put("userId",users.getUserId().toString());
+//            logToken.put("academy",users.getAcademy());
+            logToken.put("openid",openId);
             String token = JWTUtils.getToken(logToken);
             Map<String,String> map = new HashMap<>();
             map.put("token",token);
@@ -120,5 +124,14 @@ public class UserServiceImpl implements UserService {
             return new ResponseResult(HttpStateCode.OK.getCode(), "查询成功", user);
         }
         return new ResponseResult(HttpStateCode.INTERNAL_SERVER_ERROR.getCode(), "服务端错误", null);
+    }
+
+    public boolean setToken(String token, String type){
+        try {
+            redisTemplate.opsForValue().set(token,type,7,java.util.concurrent.TimeUnit.DAYS);
+            return true;
+        }catch (Exception e){
+            return false;
+        }
     }
 }

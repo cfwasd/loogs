@@ -5,10 +5,12 @@ import com.example.common.JWTUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.annotation.Resource;
 import lombok.SneakyThrows;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
 import org.springframework.core.Ordered;
 import org.springframework.core.io.buffer.DataBuffer;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.http.server.reactive.ServerHttpResponse;
@@ -25,6 +27,9 @@ import java.util.Map;
 public class GlobalTokenFilter implements GlobalFilter, Ordered {
     @Resource
     private ObjectMapper mapper;
+
+    @Autowired
+    private RedisTemplate<String,String> redisTemplate;
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
         try {
@@ -43,10 +48,13 @@ public class GlobalTokenFilter implements GlobalFilter, Ordered {
             }catch (Exception e){
                 return denyAccess(exchange, HttpStateCode.BAD_REQUEST, "没有访问权限");
             }
-            Map<String, Object> map = JWTUtils.checkLog(token);
-            if ("true".equals(map.get("state"))) {
+            if (checkToken(token)){
                 return chain.filter(exchange);
             }
+//            Map<String, Object> map = JWTUtils.checkLog(token);
+//            if ("true".equals(map.get("state"))) {
+//                return chain.filter(exchange);
+//            }
         }catch (Exception e){
             return denyAccess(exchange, HttpStateCode.INTERNAL_SERVER_ERROR,"服务端错误");
         }
@@ -69,5 +77,10 @@ public class GlobalTokenFilter implements GlobalFilter, Ordered {
         byte[] bytes = mapper.writeValueAsBytes(result);
         DataBuffer buffer = response.bufferFactory().wrap(bytes);
         return response.writeWith(Mono.just(buffer));
+    }
+
+    public boolean checkToken(String token){
+        System.out.println("token:"+redisTemplate.opsForValue().get(token));
+        return Boolean.TRUE.equals(redisTemplate.hasKey(token));
     }
 }

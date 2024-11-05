@@ -34,7 +34,7 @@ public class WxLoginHttps {
             // 构建请求 URL
             String url = "https://api.weixin.qq.com/sns/jscode2session";
             //小程序appid
-            String appId = "wx2110eee51f4328b4";
+            String appId = "wx58f764a104449398";
             //小程序secret
             String appSecret = "01d2990b4fcc2efa70c2ba8d682a6a6c";
             // 构建 URI

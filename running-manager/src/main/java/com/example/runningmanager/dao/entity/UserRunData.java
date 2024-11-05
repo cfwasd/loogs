@@ -30,5 +30,9 @@ public class UserRunData {
     @Column(name = "state", nullable = false, columnDefinition = "tinyint(1) default 0")
     private boolean state;
 
-
+    public UserRunData(Integer userId, Integer mileage, Integer day) {
+        this.userId = userId;
+        this.mileage = mileage;
+        this.day = day;
+    }
 }

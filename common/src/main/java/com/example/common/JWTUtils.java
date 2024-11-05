@@ -102,14 +102,4 @@ public class JWTUtils {
         map.put("type","null");
         return map;
     }
-
-//    public static void main(String[] args) {
-//        Map<String, String> map = new HashMap<>();
-//        map.put("username", "loogs");
-//        map.put("type", "admin");
-//        String token = JWTUtils.getToken(map);
-//        System.out.println(token);
-//        Map map1 = JWTUtils.checkType(token);
-//        System.out.println(map1.get("type"));
-//    }
 }
