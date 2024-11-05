@@ -11,5 +11,5 @@ import java.util.List;
  */
 @Mapper
 public interface UserRunDataMapper extends BaseMapper<UserRunData> {
-    List<UserRunData> selectByMillage();
+    List<UserRunData> selectByMillage(int count);
 }

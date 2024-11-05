@@ -62,7 +62,11 @@ public class DataOperation {
         }
     }
 
-    public List<UserRunData> selectData(){
-        return userRunDataMapper.selectByMillage();
+    public List<UserRunData> selectData(int count){
+        if (count == 0){
+            return userRunDataMapper.selectByMillage(10);
+        }else {
+            return userRunDataMapper.selectByMillage(count);
+        }
     }
 }
