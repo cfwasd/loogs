@@ -136,6 +136,28 @@ public class RunningServiceImpl implements RunningService {
         return new ResponseResult(HttpStateCode.INTERNAL_SERVER_ERROR.getCode(), "服务端错误", null);
     }
 
+    //兑换里程
+    @Override
+    public ResponseResult exchangeMileage(String userId,String redeemable) {
+        if (userId != null && redeemable != null){
+            int i = weRunRedisUtil.exchange(userId,redeemable);
+            if(i==200){
+                return new ResponseResult(HttpStateCode.OK.getCode(), "兑换成功", null);
+            }
+            if (i==1){
+                return new ResponseResult(HttpStateCode.INTERNAL_SERVER_ERROR.getCode(), "兑换失败，运动步数不足", null);
+            }
+            if (i==0){
+                return new ResponseResult(HttpStateCode.INTERNAL_SERVER_ERROR.getCode(), "兑换失败，用户不存在", null);
+            }
+        }else {
+            return new ResponseResult(HttpStateCode.INTERNAL_SERVER_ERROR.getCode(), "参数为空", null);
+        }
+        return new ResponseResult(HttpStateCode.INTERNAL_SERVER_ERROR.getCode(), "兑换失败，服务端错误", null);
+    }
+
+
+
 
 }
 

@@ -69,7 +69,7 @@ public class WeRunRedisUtil {
         //判断运动步数是否足够兑换里程
         if(maxStepCount >= Integer.parseInt(stepCount)){
             //更新用户运动里程和兑换次数
-            Integer totalMileage  = Integer.parseInt(userData.get("totalMileage").toString()) + Integer.parseInt(stepCount)*10;
+            Integer totalMileage  = Integer.parseInt(userData.get("totalMileage").toString()) + Integer.parseInt(stepCount)/10;
             //更新用户已兑换步数
             redisTemplate.opsForHash().put(userId, "uesStepCount", stepCount);
             //更新兑换次数

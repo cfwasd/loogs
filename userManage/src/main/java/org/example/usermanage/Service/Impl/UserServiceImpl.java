@@ -34,8 +34,8 @@ public class UserServiceImpl implements UserService {
     WxLoginHttps wxLoginHttps = new WxLoginHttps();
 
     //根和userID查询信息
-    public Users selectByUserId(String userId) {
-        return userMapper.selectOne(new QueryWrapper<Users>().eq("user_id",userId));
+    public Users selectByUserId(int userId) {
+        return userMapper.selectByUserId(userId);
     }
     @Override
     //新增数据
@@ -59,7 +59,7 @@ public class UserServiceImpl implements UserService {
             return new ResponseResult(HttpStateCode.BAD_REQUEST.getCode(), "参数错误", null);
         }
         String openId = wxLoginHttps.wiLog(code).getWxlogin().getOpenid();
-        Users user = userMapper.selectOne(new QueryWrapper<Users>().eq("open_id",openId));
+        Users user = userMapper.selectByOpenId(openId);
         if (user==null) {
             return new ResponseResult(HttpStateCode.BAD_REQUEST.getCode(), "用户不存在", null);
         }else {
@@ -68,7 +68,10 @@ public class UserServiceImpl implements UserService {
             logToken.put("academy",user.getAcademy());
             String token = JWTUtils.getToken(logToken);
             System.out.println(user.toString());
-            return new ResponseResult(HttpStateCode.OK.getCode(), "登陆成功", token);
+            Map<String,String> map = new HashMap<>();
+            map.put("token",token);
+            map.put("openId",openId);
+            return new ResponseResult(HttpStateCode.OK.getCode(), "登陆成功", map);
         }
 
     }
@@ -100,7 +103,10 @@ public class UserServiceImpl implements UserService {
             logToken.put("userId",users.getUserId().toString());
             logToken.put("academy",users.getAcademy());
             String token = JWTUtils.getToken(logToken);
-            return new ResponseResult(HttpStateCode.OK.getCode(), "注册成功",token);
+            Map<String,String> map = new HashMap<>();
+            map.put("token",token);
+            map.put("openId",openId);
+            return new ResponseResult(HttpStateCode.OK.getCode(), "注册成功",map);
         }
     }
 

@@ -27,4 +27,7 @@ public interface RunningService {
 
     //查询运动信息
     public ResponseResult selectByUserIdAndDay(Integer userId);
+
+    //兑换里程
+    public ResponseResult exchangeMileage(String userId,String redeemable);
 }

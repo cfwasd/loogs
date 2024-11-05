@@ -25,4 +25,8 @@ public interface UserMapper extends BaseMapper<Users> {
     //根据学号查询用户
     @Select("select * from users where student_id = #{studentId}")
     public Users selectByStudentId(String studentId);
+
+    //根据id查询用户
+    @Select("select * from users where user_id = #{userId}")
+    public Users selectByUserId(Integer userId);
 }
