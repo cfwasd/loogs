@@ -1,5 +1,6 @@
 package com.example.runningmanager.dao.entity;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import jakarta.persistence.*;
 
 import java.util.Date;
@@ -22,6 +23,7 @@ public class Article {
     private String content;
 
     @Column(name = "picUrl")
+    @TableField("picUrl")
     private String picUrl;
 
     @Column(name = "date")

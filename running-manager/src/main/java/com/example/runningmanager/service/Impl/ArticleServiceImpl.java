@@ -73,8 +73,18 @@ public class ArticleServiceImpl implements ArticleService {
     public Class<Article> getEntityClass() {
         return null;
     }
+    @Override
     public ResponseResult getArticleById(int id) {
         List<Article> list = articleMapper.selectList(new QueryWrapper<Article>().eq("id",id));
         return new ResponseResult(HttpStateCode.OK.getCode(), "获取成功",list);
+    }
+
+    public boolean saveArticle(Article article) {
+        int res = articleMapper.saveArticle(article);
+        return res > 0;
+    }
+    public boolean updateArticle(Article article) {
+        int res = articleMapper.updateArticle(article);
+        return res > 0;
     }
 }
