@@ -36,7 +36,7 @@ public class WxLoginHttps {
             //小程序appid
             String appId = "wx58f764a104449398";
             //小程序secret
-            String appSecret = "01d2990b4fcc2efa70c2ba8d682a6a6c";
+            String appSecret = "a5510da50af49c5ae513464a9d4ab321";
             // 构建 URI
             URIBuilder uriBuilder = new URIBuilder(url)
                     .addParameter("appid", appId)

@@ -20,8 +20,8 @@ public class UserRunDataController {
     private DataOperation dataOperation;
 
     @GetMapping("/sort/{count}")
-    public ResponseResult sort(@PathVariable(value = "count",required = false) String count) {
-        List<UserRunData> list = dataOperation.selectData(Integer.parseInt(count));
+    public ResponseResult sort(@PathVariable(value = "count",required = false) int count) {
+        List<UserRunData> list = dataOperation.selectData(count);
         return new ResponseResult(HttpStateCode.OK.getCode(), "获取成功",list);
     }
 }
